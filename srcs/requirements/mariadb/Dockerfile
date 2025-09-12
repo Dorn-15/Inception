@@ -1,14 +1,17 @@
-FROM debian:bookworm-slim
+FROM alpine:3.19
 
-RUN apt-get update && apt-get install -y mariadb-server \
- && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk upgrade && \
+	apk add mariadb mariadb-client && \
+	rm -rf /var/cache/apk/* && \
+	mkdir -p /run/mysqld /var/lib/mysql && \
+	chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
-# Bind sur 0.0.0.0
-RUN sed -ri 's/^#?bind-address.*/bind-address=0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 COPY tools/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 3306
-VOLUME ["/home/adoireau/data/lib/mysql"]
+# Volume pour les données de la base de données
+VOLUME ["/var/lib/mysql"]
 ENTRYPOINT ["/entrypoint.sh"]

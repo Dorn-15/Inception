@@ -3,34 +3,37 @@ services:
     build: ./requirements/mariadb
     container_name: mariadb
     env_file: .env
+    #port de test
+    ports:
+      - "3307:3306"
     volumes:
-      - db_data:/home/adoireau/data/lib/mysql
+      - db_data:/var/lib/mysql
       - ../secrets:/run/secrets:ro
     networks:
       - inception_net
     restart: unless-stopped
 
-  wordpress:
-    build: ./requirements/wordpress
-    container_name: wordpress
-    env_file: .env
-    depends_on:
-      - mariadb
-    volumes:
-      - wp_data:/home/adoireau/data/www/html
-      - ../secrets:/run/secrets:ro
-    networks:
-      - inception_net
-    expose:
-      - "9000"
-    restart: unless-stopped
+  # wordpress:
+  #   build: ./requirements/wordpress
+  #   container_name: wordpress
+  #   env_file: .env
+  #   depends_on:
+  #     - mariadb
+  #   volumes:
+  #     - wp_data:/home/adoireau/data/www/html
+  #     - ../secrets:/run/secrets:ro
+  #   networks:
+  #     - ${NETWORK_NAME}
+  #   expose:
+  #     - "9000"
+  #   restart: unless-stopped
 
   nginx:
     build: ./requirements/nginx
     container_name: nginx
     env_file: .env
-    depends_on:
-      - wordpress
+    # depends_on:
+    #   - wordpress
     ports:
       - "443:443"
     volumes:
@@ -38,13 +41,13 @@ services:
       - ../secrets:/run/secrets:ro
     networks:
       - inception_net
-    restart: unless-stopped
+    restart: always
 
 volumes:
   db_data:
   wp_data:
 
 networks:
-    inception_net:
-      name: inception_net
-      driver: bridge
+  inception_net:
+    name: inception_net
+    driver: bridge
