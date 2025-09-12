@@ -1,0 +1,50 @@
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file: .env
+    volumes:
+      - db_data:/home/adoireau/data/lib/mysql
+      - ../secrets:/run/secrets:ro
+    networks:
+      - inception_net
+    restart: unless-stopped
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    env_file: .env
+    depends_on:
+      - mariadb
+    volumes:
+      - wp_data:/home/adoireau/data/www/html
+      - ../secrets:/run/secrets:ro
+    networks:
+      - inception_net
+    expose:
+      - "9000"
+    restart: unless-stopped
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    env_file: .env
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    volumes:
+      - /home/adoireau/data/www/html:/var/www/wordpress:ro
+      - ../secrets:/run/secrets:ro
+    networks:
+      - inception_net
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  wp_data:
+
+networks:
+    inception_net:
+      name: inception_net
+      driver: bridge
