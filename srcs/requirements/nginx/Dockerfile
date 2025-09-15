@@ -1,5 +1,7 @@
 FROM alpine:3.19
 
+EXPOSE 443
+
 RUN apk update && apk upgrade && \
 	apk add nginx openssl curl && \
 	rm -rf /var/cache/apk/* && \
@@ -16,6 +18,4 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 RUN chown -R nginx:nginx /var/www/wordpress && \
 	chmod -R 755 /var/www/wordpress
 
-EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
-

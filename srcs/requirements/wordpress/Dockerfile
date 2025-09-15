@@ -1,19 +1,47 @@
-FROM debian:bookworm-slim
+FROM alpine:3.19
 
-RUN apt-get update && apt-get install -y \
-    php-fpm php-mysql php-cli curl less unzip \
- && rm -rf /var/lib/apt/lists/*
+# Installation des dépendances nécessaires
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+    php82 \
+    php82-fpm \
+    php82-mysqli \
+    php82-json \
+    php82-curl \
+    php82-dom \
+    php82-exif \
+    php82-fileinfo \
+    php82-mbstring \
+    php82-openssl \
+    php82-xml \
+    php82-zip \
+    php82-phar \
+    mariadb-client \
+    wget \
+    curl
 
-# Installer wp-cli
-RUN curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp \
- && chmod +x /usr/local/bin/wp
+# Téléchargement et installation de WordPress
+RUN wget https://wordpress.org/latest.tar.gz -P /var/www && \
+    cd /var/www && tar -xzf latest.tar.gz && rm latest.tar.gz && \
+    chown -R nobody:nobody /var/www/wordpress
 
-# php-fpm écoute en 9000
-RUN sed -ri 's|^listen = .*|listen = 0.0.0.0:9000|' /etc/php/*/fpm/pool.d/www.conf
+# Installation de WP-CLI
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
 
-WORKDIR /home/adoireau/data/www/html
-COPY tools/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Configuration de PHP-FPM
+COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
+
+# Copie du script d'initialisation
+COPY ./tools/auto_config.sh /auto_config.sh
+RUN chmod +x /auto_config.sh
+
+# Création du dossier pour PHP-FPM
+RUN mkdir -p /run/php
+
+WORKDIR /var/www/wordpress
 
 EXPOSE 9000
-ENTRYPOINT ["/entrypoint.sh"]
+
+ENTRYPOINT ["/auto_config.sh"]

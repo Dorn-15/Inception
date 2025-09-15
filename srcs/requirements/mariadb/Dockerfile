@@ -1,5 +1,7 @@
 FROM alpine:3.19
 
+EXPOSE 3306
+
 RUN apk update && apk upgrade && \
 	apk add mariadb mariadb-client && \
 	rm -rf /var/cache/apk/* && \
@@ -11,7 +13,4 @@ COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 3306
-# Volume pour les données de la base de données
-VOLUME ["/var/lib/mysql"]
 ENTRYPOINT ["/entrypoint.sh"]
