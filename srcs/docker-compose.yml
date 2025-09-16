@@ -46,7 +46,7 @@ services:
     depends_on:
       - wordpress
     ports:
-      - "443:443"
+      - "8442:443"
     volumes:
       - wp_data:/var/www/wordpress:ro
       - ../secrets:/run/secrets:ro

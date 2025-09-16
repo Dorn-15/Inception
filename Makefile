@@ -1,4 +1,4 @@
-COMPOSE = docker compose -f srcs/docker-compose.yml --env-file srcs/.env
+COMPOSE = sudo docker compose -f srcs/docker-compose.yml --env-file srcs/.env
 
 .PHONY: up build down clean fclean re logs
 

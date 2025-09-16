@@ -25,11 +25,6 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
         --dbhost=mariadb:3306 \
         --path='/var/www/wordpress'
 
-    # # Ajouter les constantes pour forcer HTTPS et le port
-    # wp config set WP_HOME "https://${DOMAIN_NAME}:8442" --allow-root --type=constant
-    # wp config set WP_SITEURL "https://${DOMAIN_NAME}:8442" --allow-root --type=constant
-    # wp config set FORCE_SSL_ADMIN true --allow-root --type=constant
-
     # Installer WordPress et créer l'administrateur principal
     echo "Installing WordPress..."
     wp core install --allow-root \
@@ -48,10 +43,6 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
         --user_pass="$WP_USER_PASSWORD" \
         --role=author \
         --path='/var/www/wordpress'
-
-    # # Configuration des URLs WordPress avec le port
-    # wp option update home "https://${DOMAIN_NAME}:8442" --allow-root
-    # wp option update siteurl "https://${DOMAIN_NAME}:8442" --allow-root
 fi
 
 echo "Starting PHP-FPM..."
