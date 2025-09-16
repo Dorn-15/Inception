@@ -15,7 +15,7 @@ RUN apk update && apk upgrade && \
     wget
 
 # Téléchargement et installation de WordPress
-RUN wget https://wordpress.org/wordpress-6.8.2-fr_FR.tar.gz -P /var/www && \
+RUN wget https://fr.wordpress.org/wordpress-6.8.2-fr_FR.tar.gz -P /var/www && \
     cd /var/www && tar -xzf wordpress-6.8.2-fr_FR.tar.gz && rm wordpress-6.8.2-fr_FR.tar.gz && \
     chown -R nobody:nobody /var/www/wordpress
 
