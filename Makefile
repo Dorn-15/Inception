@@ -1,4 +1,4 @@
-COMPOSE = sudo docker compose -f srcs/docker-compose.yml --env-file srcs/.env
+COMPOSE = docker compose -f srcs/docker-compose.yml --env-file srcs/.env
 
 .PHONY: up build down clean fclean re logs
 
@@ -16,6 +16,8 @@ clean:
 
 fclean: clean
 	docker system prune -af
+	rm -rf /home/adoireau/data/mariadb/*
+	rm -rf /home/adoireau/data/wordpress/*
 
 re: fclean up
 

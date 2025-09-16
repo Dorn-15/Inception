@@ -9,7 +9,6 @@ services:
       - SQL_ROOT_PASSWORD=${SQL_ROOT_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
-      - ../secrets:/run/secrets:ro
     networks:
       - inception_net
     restart: always
@@ -33,7 +32,6 @@ services:
       - mariadb
     volumes:
       - wp_data:/var/www/wordpress
-      - ../secrets:/run/secrets:ro
     networks:
       - inception_net
     restart: always
@@ -46,17 +44,26 @@ services:
     depends_on:
       - wordpress
     ports:
-      - "8442:443"
+      - "443:443"
     volumes:
       - wp_data:/var/www/wordpress:ro
-      - ../secrets:/run/secrets:ro
     networks:
       - inception_net
     restart: always
 
 volumes:
   db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/adoireau/data/mariadb
   wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/adoireau/data/wordpress
 
 networks:
   inception_net:
