@@ -15,9 +15,9 @@ clean:
 	$(COMPOSE) down -v
 
 fclean: clean
-	docker system prune -af
-	rm -rf /home/adoireau/data/mariadb/*
-	rm -rf /home/adoireau/data/wordpress/*
+	sudo docker system prune -af
+	sudo rm -rf /home/adoireau/data/mariadb/*
+	sudo rm -rf /home/adoireau/data/wordpress/*
 
 re: fclean up
 

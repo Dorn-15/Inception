@@ -7,22 +7,16 @@ RUN apk update && apk upgrade && \
     php82-fpm \
     php82-mysqli \
     php82-json \
-    php82-curl \
     php82-dom \
-    php82-exif \
-    php82-fileinfo \
     php82-mbstring \
     php82-openssl \
     php82-xml \
-    php82-zip \
-    php82-phar \
     mariadb-client \
-    wget \
-    curl
+    wget
 
 # Téléchargement et installation de WordPress
-RUN wget https://wordpress.org/latest.tar.gz -P /var/www && \
-    cd /var/www && tar -xzf latest.tar.gz && rm latest.tar.gz && \
+RUN wget https://wordpress.org/wordpress-6.8.2.tar.gz -P /var/www && \
+    cd /var/www && tar -xzf wordpress-6.8.2.tar.gz && rm wordpress-6.8.2.tar.gz && \
     chown -R nobody:nobody /var/www/wordpress
 
 # Installation de WP-CLI
